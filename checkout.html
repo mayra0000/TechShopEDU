@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechShop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="css/estilos.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rammetto+One&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">TechShop EDU</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fas fa-home me-1"></i>Catálogo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="carrito.html"><i class="fas fa-shopping-cart me-1"></i>Carrito <span id="cart-badge" class="badge bg-warning">0</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="faq.html"><i class="fas fa-question-circle me-1"></i>FAQ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contacto.html"><i class="fas fa-envelope me-1"></i>Contacto</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="container mt-5 pt-5">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mb-4"><i class="fas fa-credit-card me-2"></i>Finalizar Compra</h2>
+                
+                <!-- Barra de Progreso -->
+                <div class="progress mb-4" style="height: 10px;">
+                    <div class="progress-bar bg-success" role="progressbar" id="progress-bar" style="width: 33%"></div>
+                </div>
+                
+                <!-- Indicadores de Paso -->
+                <div class="row mb-4">
+                    <div class="col-4 text-center">
+                        <div class="step-indicator active" id="step-1-indicator">
+                            <i class="fas fa-user-circle"></i>
+                            <div class="small">Datos de Envío</div>
+                        </div>
+                    </div>
+                    <div class="col-4 text-center">
+                        <div class="step-indicator" id="step-2-indicator">
+                            <i class="fas fa-truck"></i>
+                            <div class="small">Método de Entrega</div>
+                        </div>
+                    </div>
+                    <div class="col-4 text-center">
+                        <div class="step-indicator" id="step-3-indicator">
+                            <i class="fas fa-check-circle"></i>
+                            <div class="small">Confirmación</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carrito Vacío -->
+                <div id="carrito-vacio-checkout" class="text-center py-5" style="display: none;">
+                    <i class="fas fa-shopping-cart display-1 text-muted mb-3"></i>
+                    <h4>No tienes productos en tu carrito</h4>
+                    <p class="text-muted">Agrega productos antes de proceder al checkout</p>
+                    <a href="index.html" class="btn btn-primary">
+                        <i class="fas fa-arrow-left me-2"></i>Ir al Catálogo
+                    </a>
+                </div>
+
+                <!-- Formulario de Checkout -->
+                <div id="checkout-form" class="row">
+                    <div class="col-md-8">
+                        <!-- Paso 1: Datos de Envío -->
+                        <div class="step-content" id="step-1">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-user-circle me-2"></i>Paso 1: Datos de Envío</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="form-envio">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="nombre" class="form-label">Nombre Completo *</label>
+                                                <input type="text" class="form-control" id="nombre" required>
+                                                <div class="invalid-feedback">Por favor ingresa tu nombre completo</div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="email" class="form-label">Email *</label>
+                                                <input type="email" class="form-control" id="email" required>
+                                                <div class="invalid-feedback">Por favor ingresa un email válido</div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="direccion" class="form-label">Dirección *</label>
+                                            <input type="text" class="form-control" id="direccion" required>
+                                            <div class="invalid-feedback">Por favor ingresa tu dirección</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="ciudad" class="form-label">Ciudad *</label>
+                                                <input type="text" class="form-control" id="ciudad" required>
+                                                <div class="invalid-feedback">Por favor ingresa tu ciudad</div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="codigo-postal" class="form-label">Código Postal *</label>
+                                                <input type="text" class="form-control" id="codigo-postal" pattern="[0-9]{5}" required>
+                                                <div class="invalid-feedback">Código postal debe tener 5 dígitos</div>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-primary" onclick="siguientePaso(2)">
+                                            Siguiente <i class="fas fa-arrow-right ms-2"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Paso 2: Método de Entrega -->
+                        <div class="step-content" id="step-2" style="display: none;">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-truck me-2"></i>Paso 2: Método de Entrega</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="form-entrega">
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
+                                                <div class="card delivery-option" onclick="seleccionarEntrega('estandar')">
+                                                    <div class="card-body text-center">
+                                                        <i class="fas fa-truck display-6 text-primary"></i>
+                                                        <h6 class="mt-2">Envío Estándar</h6>
+                                                        <p class="small text-muted">5-7 días hábiles</p>
+                                                        <p class="fw-bold">Gratis</p>
+                                                        <input type="radio" name="metodo-entrega" value="estandar" class="d-none">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <div class="card delivery-option" onclick="seleccionarEntrega('expres')">
+                                                    <div class="card-body text-center">
+                                                        <i class="fas fa-rocket display-6 text-warning"></i>
+                                                        <h6 class="mt-2">Envío Exprés</h6>
+                                                        <p class="small text-muted">1-2 días hábiles</p>
+                                                        <p class="fw-bold">$150.00</p>
+                                                        <input type="radio" name="metodo-entrega" value="expres" class="d-none">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <div class="card delivery-option" onclick="seleccionarEntrega('tienda')">
+                                                    <div class="card-body text-center">
+                                                        <i class="fas fa-store display-6 text-success"></i>
+                                                        <h6 class="mt-2">Recogida en Tienda</h6>
+                                                        <p class="small text-muted">Disponible hoy</p>
+                                                        <p class="fw-bold">Gratis</p>
+                                                        <input type="radio" name="metodo-entrega" value="tienda" class="d-none">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <button type="button" class="btn btn-outline-primary" onclick="pasoAnterior(1)">
+                                                <i class="fas fa-arrow-left me-2"></i>Anterior
+                                            </button>
+                                            <button type="button" class="btn btn-primary" onclick="siguientePaso(3)">
+                                                Siguiente <i class="fas fa-arrow-right ms-2"></i>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Paso 3: Confirmación -->
+                        <div class="step-content" id="step-3" style="display: none;">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-check-circle me-2"></i>Paso 3: Confirmación del Pedido</h5>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Resumen de datos -->
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <h6>Datos de Envío:</h6>
+                                            <div id="resumen-envio"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6>Método de Entrega:</h6>
+                                            <div id="resumen-entrega"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Productos del carrito -->
+                                    <h6>Productos:</h6>
+                                    <div id="resumen-productos"></div>
+                                    
+                                    <div class="d-flex justify-content-between mt-4">
+                                        <button type="button" class="btn btn-outline-primary" onclick="pasoAnterior(2)">
+                                            <i class="fas fa-arrow-left me-2"></i>Anterior
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-lg" onclick="confirmarPedido()">
+                                            <i class="fas fa-check me-2"></i>Confirmar Pedido
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resumen del Pedido -->
+                    <div class="col-md-4">
+                        <div class="card sticky-top">
+                            <div class="card-body">
+                                <h5 class="card-title">Resumen del Pedido</h5>
+                                <div id="resumen-carrito-checkout"></div>
+                                <hr>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Subtotal:</span>
+                                    <span id="subtotal-checkout">$0.00</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Envío:</span>
+                                    <span id="costo-envio">$0.00</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Impuestos:</span>
+                                    <span id="impuestos-checkout">$0.00</span>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-between fw-bold fs-5">
+                                    <span>Total:</span>
+                                    <span id="total-checkout">$0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Footer-->
+    <footer>
+    <div class="container">
+        <div class="row footer-info">
+            <div class="col-md-4 mb-4">
+                <h4>TechShop EDU</h4>
+                <p>Tu tienda de confianza para gadgets educativos de última generación.</p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="social-links">
+                    <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" title="Discord"><i class="fa-brands fa-discord"></i></a>
+                    <a href="#" title="Whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-map-marker-alt me-2"></i>Puebla, México</li>
+                    <li><i class="fas fa-phone me-2"></i>+52 222 123 4567</li>
+                    <li><i class="fas fa-envelope me-2"></i>info@techshopedu.com</li>
+                </ul>
+            </div>
+        </div><hr>
+        <div class="text-center">
+            <p>&copy; 2025 TechShop EDU. Todos los derechos reservados.</p>
+        </div>
+    </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/carrito.js"></script>
+    <script src="js/checkout.js"></script>
+</body>
+</html>
