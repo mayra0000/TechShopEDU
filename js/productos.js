@@ -247,14 +247,11 @@ function crearSelectoresVariantes(producto) {
 
 // Función para seleccionar variante
 function seleccionarVariante(elemento, productoId) {
-    // Remover clase active de hermanos
     const hermanos = elemento.parentNode.querySelectorAll('.variant-option');
     hermanos.forEach(h => h.classList.remove('active'));
     
-    // Agregar clase active al elemento seleccionado
     elemento.classList.add('active');
-    
-    // Actualizar precio
+
     actualizarPrecioProducto(productoId);
 }
 
@@ -362,7 +359,7 @@ function mostrarNotificacion(mensaje, tipo = 'info') {
     }, 3000);
 }
 
-// Cargar productos cuando el DOM esté listo
+// Cargar productos según DOM 
 document.addEventListener('DOMContentLoaded', function() {
     cargarProductos();
 });
