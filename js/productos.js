@@ -214,7 +214,7 @@ function crearTarjetaProducto(producto) {
 // Función para crear selectores de variantes
 function crearSelectoresVariantes(producto) {
     const variantesPorTipo = {};
-    
+
     // Agrupar variantes por tipo
     producto.variantes.forEach(variante => {
         if (!variantesPorTipo[variante.tipo]) {
@@ -249,7 +249,7 @@ function crearSelectoresVariantes(producto) {
 function seleccionarVariante(elemento, productoId) {
     const hermanos = elemento.parentNode.querySelectorAll('.variant-option');
     hermanos.forEach(h => h.classList.remove('active'));
-    
+
     elemento.classList.add('active');
 
     actualizarPrecioProducto(productoId);
@@ -261,11 +261,11 @@ function actualizarPrecioProducto(productoId) {
     if (!producto) return;
 
     let precioTotal = producto.precio;
-    
+
     // Sumar precios de variantes seleccionadas
     const variantesContainer = document.getElementById(`variants-${productoId}`);
     const variantesActivas = variantesContainer.querySelectorAll('.variant-option.active');
-    
+
     variantesActivas.forEach(variante => {
         precioTotal += parseFloat(variante.dataset.precio) || 0;
     });
@@ -281,7 +281,7 @@ function actualizarPrecioProducto(productoId) {
 function obtenerVariantesSeleccionadas(productoId) {
     const variantes = {};
     const variantesContainer = document.getElementById(`variants-${productoId}`);
-    
+
     if (variantesContainer) {
         const grupos = variantesContainer.querySelectorAll('.variant-options');
         grupos.forEach(grupo => {
@@ -295,7 +295,7 @@ function obtenerVariantesSeleccionadas(productoId) {
             }
         });
     }
-    
+
     return variantes;
 }
 
@@ -306,7 +306,7 @@ function agregarAlCarrito(productoId) {
 
     const variantesSeleccionadas = obtenerVariantesSeleccionadas(productoId);
     let precioFinal = producto.precio;
-    
+
     // Calcular precio con variantes
     Object.values(variantesSeleccionadas).forEach(variante => {
         precioFinal += variante.precioExtra;
@@ -331,7 +331,7 @@ function agregarAlCarrito(productoId) {
     // Agregar al carrito usando la función del carrito.js
     if (typeof agregarItemAlCarrito === 'function') {
         agregarItemAlCarrito(item);
-        
+
         // Mostrar feedback visual
         mostrarNotificacion('Producto agregado al carrito', 'success');
     }
@@ -343,7 +343,7 @@ function mostrarNotificacion(mensaje, tipo = 'info') {
     const notificacion = document.createElement('div');
     notificacion.className = `alert alert-${tipo} alert-dismissible fade show position-fixed`;
     notificacion.style.cssText = 'top: 100px; right: 20px; z-index: 1050; min-width: 300px;';
-    
+
     notificacion.innerHTML = `
         ${mensaje}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -363,3 +363,56 @@ function mostrarNotificacion(mensaje, tipo = 'info') {
 document.addEventListener('DOMContentLoaded', function() {
     cargarProductos();
 });
+
+// Funciones para el sistema de filtros (se llaman desde index.html)
+function seleccionarVariante(elemento, productoId) {
+    const hermanos = elemento.parentNode.querySelectorAll('.variant-option');
+    hermanos.forEach(h => h.classList.remove('active'));
+
+    elemento.classList.add('active');
+    actualizarPrecioProducto(productoId);
+}
+
+function actualizarPrecioProducto(productoId) {
+    const producto = productos.find(p => p.id === productoId);
+    if (!producto) return;
+
+    let precioTotal = producto.precio;
+
+    // Sumar precios de variantes seleccionadas
+    const variantesContainer = document.getElementById(`variants-${productoId}`);
+    if (!variantesContainer) return;
+
+    const variantesActivas = variantesContainer.querySelectorAll('.variant-option.active');
+
+    variantesActivas.forEach(variante => {
+        precioTotal += parseFloat(variante.dataset.precio) || 0;
+    });
+
+    // Actualizar precio en la interfaz
+    const precioElemento = document.getElementById(`price-${productoId}`);
+    if (precioElemento) {
+        precioElemento.textContent = `$${precioTotal.toFixed(2)}`;
+    }
+}
+
+function obtenerVariantesSeleccionadas(productoId) {
+    const variantes = {};
+    const variantesContainer = document.getElementById(`variants-${productoId}`);
+
+    if (variantesContainer) {
+        const grupos = variantesContainer.querySelectorAll('.variant-options');
+        grupos.forEach(grupo => {
+            const tipo = grupo.dataset.tipo;
+            const seleccionada = grupo.querySelector('.variant-option.active');
+            if (seleccionada) {
+                variantes[tipo] = {
+                    valor: seleccionada.dataset.valor,
+                    precioExtra: parseFloat(seleccionada.dataset.precio) || 0
+                };
+            }
+        });
+    }
+
+    return variantes;
+}

@@ -10,6 +10,128 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rammetto+One&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos para el título destacado */
+        .catalog-title {
+            position: relative;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        
+        .catalog-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-green));
+            border-radius: 2px;
+        }
+        
+        /* Estilos para el sistema de filtros */
+        .filters-section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2.5rem;
+        }
+        
+        .filter-group {
+            margin-bottom: 1rem;
+        }
+        
+        .filter-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .filter-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+        }
+        
+        .price-slider {
+            width: 100%;
+            margin: 0.5rem 0;
+        }
+        
+        .price-values {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: var(--gray-light);
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box .form-control {
+            padding-left: 2.5rem;
+            border-radius: 25px;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-light);
+        }
+        
+        .filter-toggle {
+            display: none;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 0.5rem 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 992px) {
+            .filter-toggle {
+                display: inline-block;
+            }
+            
+            .filters-container {
+                display: none;
+            }
+            
+            .filters-container.show {
+                display: block;
+            }
+        }
+        
+        .btn-filter {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 0.5rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-filter:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .sort-select {
+            border-radius: 25px;
+            padding: 0.5rem 1rem;
+            border: 1px solid #ced4da;
+        }
+        
+        .results-count {
+            font-weight: 500;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+    </style>
 </head>
 <body>
     <!-- Navbar -->
@@ -46,9 +168,92 @@
     <!-- Catálogo de Productos -->
     <section id="productos" class="py-5">
         <div class="container">
-            <h2 class="text-center mb-5">Catálogo de Productos</h2>
+            <!-- Título destacado -->
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="catalog-title">Catálogo de Productos</h2>
+                    <p class="lead text-muted mb-4">Descubre nuestra selección de tecnología educativa</p>
+                </div>
+            </div>
+            
+            <!-- Sistema de Filtros -->
+            <div class="filters-section">
+                <button class="filter-toggle" type="button" id="toggleFilters">
+                    <i class="fas fa-filter me-2"></i>Filtros
+                </button>
+                
+                <div class="row align-items-end" id="filtersContainer">
+                    <!-- Búsqueda -->
+                    <div class="col-md-3 filter-group">
+                        <label for="searchInput">Buscar producto</label>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Nombre, marca, etc.">
+                        </div>
+                    </div>
+                    
+                    <!-- Filtro por categoría -->
+                    <div class="col-md-2 filter-group">
+                        <label for="categoryFilter">Categoría</label>
+                        <select class="form-select" id="categoryFilter">
+                            <option value="">Todas</option>
+                            <option value="robotica">Robótica</option>
+                            <option value="programacion">Programación</option>
+                            <option value="electronica">Electrónica</option>
+                            <option value="realidad-virtual">Realidad Virtual</option>
+                            <option value="impresion-3d">Impresión 3D</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Filtro por precio -->
+                    <div class="col-md-3 filter-group">
+                        <label for="priceRange">Rango de precio</label>
+                        <input type="range" class="form-range price-slider" id="priceRange" min="0" max="10000" step="100">
+                        <div class="price-values" style="color:black">
+                            <span id="minPrice">$0</span>
+                            <span id="maxPrice">$10,000</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Ordenar por -->
+                    <div class="col-md-2 filter-group">
+                        <label for="sortBy">Ordenar por</label>
+                        <select class="form-select" id="sortBy">
+                            <option value="default">Por defecto</option>
+                            <option value="price-asc">Precio: Menor a Mayor</option>
+                            <option value="price-desc">Precio: Mayor a Menor</option>
+                            <option value="name-asc">Nombre: A-Z</option>
+                            <option value="name-desc">Nombre: Z-A</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Botón aplicar filtros -->
+                    <div class="col-md-2 filter-group">
+                        <button class="btn btn-filter w-100" id="applyFilters">
+                            <i class="fas fa-filter me-2"></i>Aplicar
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Contador de resultados -->
+                <div class="results-count mt-3" id="resultsCount">
+                    Mostrando <span id="productsCount">0</span> productos
+                </div>
+            </div>
+
+            <!-- Grid de Productos -->
             <div class="row" id="productos-container">
                 <!-- Los productos se cargan dinámicamente -->
+            </div>
+            
+            <!-- Mensaje cuando no hay resultados -->
+            <div class="text-center py-5" id="noResults" style="display: none;">
+                <i class="fas fa-search display-1 text-muted mb-3"></i>
+                <h4>No se encontraron productos</h4>
+                <p class="text-muted">Intenta ajustar los filtros de búsqueda</p>
+                <button class="btn btn-primary" id="resetFilters">
+                    <i class="fas fa-redo me-2"></i>Restablecer filtros
+                </button>
             </div>
         </div>
     </section>
@@ -86,5 +291,207 @@
     <script src="js/productos.js"></script>
     <script src="js/carrito.js"></script>
     <script src="js/main.js"></script>
-</body>
+    <script>
+    // Lógica para el sistema de filtros
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar el rango de precios
+        inicializarRangoPrecios();
+        
+        // Toggle de filtros en móviles
+        document.getElementById('toggleFilters').addEventListener('click', function() {
+            const filtersContainer = document.getElementById('filtersContainer');
+            filtersContainer.classList.toggle('show');
+        });
+        
+        // Aplicar filtros
+        document.getElementById('applyFilters').addEventListener('click', aplicarFiltros);
+        document.getElementById('resetFilters').addEventListener('click', resetearFiltros);
+        
+        // Aplicar filtros al cambiar algunos valores
+        document.getElementById('sortBy').addEventListener('change', aplicarFiltros);
+        document.getElementById('categoryFilter').addEventListener('change', aplicarFiltros);
+        document.getElementById('priceRange').addEventListener('input', function() {
+            document.getElementById('minPrice').textContent = `$${parseInt(this.value).toLocaleString()}`;
+        });
+        document.getElementById('searchInput').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') aplicarFiltros();
+        });
+        
+        // Inicializar con todos los productos visibles
+        aplicarFiltros();
+    });
+    
+    function inicializarRangoPrecios() {
+        const priceRange = document.getElementById('priceRange');
+        const maxPrice = document.getElementById('maxPrice');
+        
+        // Establecer valor máximo según los productos
+        const maxProductPrice = Math.max(...productos.map(p => p.precio));
+        priceRange.max = maxProductPrice;
+        priceRange.value = maxProductPrice;
+        maxPrice.textContent = `$${maxProductPrice.toLocaleString()}`;
+    }
+    
+    function aplicarFiltros() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const category = document.getElementById('categoryFilter').value;
+        const priceLimit = parseInt(document.getElementById('priceRange').value);
+        const sortBy = document.getElementById('sortBy').value;
+        
+        let productosFiltrados = [...productos];
+        
+        // Filtrar por término de búsqueda
+        if (searchTerm) {
+            productosFiltrados = productosFiltrados.filter(producto => 
+                producto.nombre.toLowerCase().includes(searchTerm) ||
+                producto.descripcion.toLowerCase().includes(searchTerm) ||
+                producto.categoria.toLowerCase().includes(searchTerm)
+            );
+        }
+        
+        // Filtrar por categoría
+        if (category) {
+            productosFiltrados = productosFiltrados.filter(producto => 
+                producto.categoria === category
+            );
+        }
+        
+        // Filtrar por precio
+        productosFiltrados = productosFiltrados.filter(producto => 
+            producto.precio <= priceLimit
+        );
+        
+        // Ordenar productos
+        switch(sortBy) {
+            case 'price-asc':
+                productosFiltrados.sort((a, b) => a.precio - b.precio);
+                break;
+            case 'price-desc':
+                productosFiltrados.sort((a, b) => b.precio - a.precio);
+                break;
+            case 'name-asc':
+                productosFiltrados.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                break;
+            case 'name-desc':
+                productosFiltrados.sort((a, b) => b.nombre.localeCompare(a.nombre));
+                break;
+        }
+        
+        // Mostrar u ocultar mensaje de no resultados
+        const noResults = document.getElementById('noResults');
+        if (productosFiltrados.length === 0) {
+            noResults.style.display = 'block';
+        } else {
+            noResults.style.display = 'none';
+        }
+        
+        // Renderizar productos filtrados
+        renderizarProductosFiltrados(productosFiltrados);
+        actualizarContadorProductos(productosFiltrados.length);
+    }
+    
+    function renderizarProductosFiltrados(productosArray) {
+        const container = document.getElementById('productos-container');
+        container.innerHTML = '';
+        
+        if (productosArray.length === 0) {
+            return;
+        }
+        
+        productosArray.forEach(producto => {
+            const productCard = crearTarjetaProducto(producto);
+            container.appendChild(productCard);
+        });
+    }
+    
+    function resetearFiltros() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('categoryFilter').value = '';
+        document.getElementById('sortBy').value = 'default';
+        
+        // Restablecer rango de precios
+        const maxProductPrice = Math.max(...productos.map(p => p.precio));
+        document.getElementById('priceRange').value = maxProductPrice;
+        document.getElementById('minPrice').textContent = '$0';
+        document.getElementById('maxPrice').textContent = `$${maxProductPrice.toLocaleString()}`;
+        
+        document.getElementById('noResults').style.display = 'none';
+        renderizarProductosFiltrados(productos);
+        actualizarContadorProductos(productos.length);
+    }
+    
+    function actualizarContadorProductos(cantidad) {
+        document.getElementById('productsCount').textContent = cantidad;
+    }
+    
+    // Función para crear una tarjeta de producto (similar a la de productos.js)
+    function crearTarjetaProducto(producto) {
+        const col = document.createElement('div');
+        col.className = 'col-lg-4 col-md-6 mb-4';
+    
+        col.innerHTML = `
+            <div class="card product-card h-100">
+                <div class="product-image">
+                    <img src="${producto.imagen}" alt="${producto.nombre}" class="product-img">
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <h5 class="product-title">${producto.nombre}</h5>
+                    <p class="product-description">${producto.descripcion}</p>
+                    
+                    <!-- Variantes del producto -->
+                    <div class="variant-selector" id="variants-${producto.id}">
+                        ${crearSelectoresVariantes(producto)}
+                    </div>
+                    
+                    <div class="mt-auto">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="product-price" id="price-${producto.id}">$${producto.precio.toFixed(2)}</span>
+                            <small class="text-muted text-capitalize">${producto.categoria}</small>
+                        </div>
+                        <button class="btn btn-success btn-add-to-cart w-100" 
+                                onclick="agregarAlCarrito(${producto.id})">
+                            <i class="fas fa-cart-plus me-2"></i>Agregar al Carrito
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    
+        return col;
+    }
+    
+    // Función para crear selectores de variantes (similar a la de productos.js)
+    function crearSelectoresVariantes(producto) {
+        const variantesPorTipo = {};
+        
+        // Agrupar variantes por tipo
+        producto.variantes.forEach(variante => {
+            if (!variantesPorTipo[variante.tipo]) {
+                variantesPorTipo[variante.tipo] = [];
+            }
+            variantesPorTipo[variante.tipo].push(variante);
+        });
+    
+        let html = '';
+        Object.keys(variantesPorTipo).forEach(tipo => {
+            html += `
+                <div class="mb-2">
+                    <small class="text-muted text-capitalize">${tipo}:</small><br>
+                    <div class="variant-options" data-tipo="${tipo}" data-producto="${producto.id}">
+                        ${variantesPorTipo[tipo].map((variante, index) => `
+                            <span class="variant-option ${index === 0 ? 'active' : ''}" 
+                                  data-valor="${variante.valor}" 
+                                  data-precio="${variante.precioExtra}"
+                                  onclick="seleccionarVariante(this, ${producto.id})">
+                                ${variante.valor}
+                            </span>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        });
+    
+        return html;
+    }
+</script></body>
 </html>
