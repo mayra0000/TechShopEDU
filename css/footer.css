@@ -1,0 +1,37 @@
+/* Footer */
+footer {
+    background: linear-gradient(to right, #1f2937, var(--primary-dark));
+    color: #d1d5db;
+    padding: 3rem 1.5rem;
+    margin-top: 3rem;
+}
+
+footer h4 {
+    font-family: 'Rammetto One', cursive;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.social-links {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.social-links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    background: var(--orange);
+    color: #1f2937;
+    transform: scale(1.1);
+}
+
