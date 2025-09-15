@@ -1,0 +1,451 @@
+ /* Estilos mejorados para checkout manteniendo la funcionalidad original */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #4a86e8 0%, #3a66c3 100%);
+            --primary-color: #4a86e8;
+            --primary-dark: #3a66c3;
+            --success-gradient: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --card-shadow-hover: 0 12px 35px rgba(0, 0, 0, 0.15);
+            --border-radius: 15px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Contenedor principal mejorado */
+        .container.mt-5.pt-5 {
+            padding-top: 2rem !important;
+        }
+
+        /* Título principal mejorado */
+        .container h2 {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-size: 2.5rem;
+        }
+
+        /* Barra de progreso mejorada */
+        .progress {
+            height: 12px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: var(--success-gradient);
+            border-radius: 10px;
+            transition: width 0.8s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Indicadores de pasos mejorados */
+        .step-indicator {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            transition: var(--transition);
+            box-shadow: var(--card-shadow);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--primary-gradient);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 1;
+        }
+
+        .step-indicator > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-indicator i {
+            font-size: 2.5rem;
+            color: #6c757d;
+            transition: var(--transition);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .step-indicator .small {
+            font-weight: 600;
+            color: #495057;
+            transition: var(--transition);
+        }
+
+        .step-indicator.active::before {
+            opacity: 1;
+        }
+
+        .step-indicator.active i,
+        .step-indicator.active .small {
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .step-indicator:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        /* Cards mejoradas */
+        .card {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-bottom: none;
+            padding: 2rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .card-body {
+            padding: 2.5rem;
+        }
+
+        /* Formularios mejorados */
+        .form-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            border: 2px solid #e8ecef;
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: #fafbfc;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(74, 134, 232, 0.1);
+            background: white;
+            transform: translateY(-1px);
+        }
+
+        .form-control.is-invalid {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
+        }
+
+        .invalid-feedback {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Opciones de entrega mejoradas */
+        .delivery-option {
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid #e8ecef;
+            border-radius: var(--border-radius);
+            position: relative;
+            overflow: hidden;
+            background: white;
+        }
+
+        .delivery-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--primary-gradient);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 1;
+        }
+
+        .delivery-option .card-body {
+            position: relative;
+            z-index: 2;
+            transition: var(--transition);
+            padding: 2rem;
+        }
+
+        .delivery-option:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .delivery-option.selected::before {
+            opacity: 0.1;
+        }
+
+        .delivery-option.selected {
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .delivery-option .display-6 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+
+        .delivery-option:hover .display-6,
+        .delivery-option.selected .display-6 {
+            transform: scale(1.1);
+        }
+
+        /* Botones mejorados */
+        .btn {
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: var(--transition);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            box-shadow: 0 4px 15px rgba(74, 134, 232, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 134, 232, 0.4);
+        }
+
+        .btn-success {
+            background: var(--success-gradient);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            background: transparent;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-gradient);
+            border-color: transparent;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 134, 232, 0.3);
+        }
+
+        /* Resumen del pedido mejorado */
+        .sticky-top {
+            top: 2rem;
+        }
+
+        #resumen-carrito-checkout,
+        #resumen-envio,
+        #resumen-entrega,
+        #resumen-productos {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Carrito vacío mejorado */
+        #carrito-vacio-checkout {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            padding: 4rem 2rem;
+        }
+
+        #carrito-vacio-checkout i {
+            color: #ccc;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Responsive mejorado */
+        @media (max-width: 768px) {
+            .container h2 {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .step-indicator {
+                margin-bottom: 1rem;
+                padding: 1rem;
+            }
+
+            .step-indicator i {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .card-body {
+                padding: 1.5rem;
+            }
+
+            .card-header {
+                padding: 1.5rem;
+            }
+
+            .btn {
+                padding: 1rem;
+                margin-bottom: 1rem;
+                width: 100%;
+            }
+
+            .d-flex.justify-content-between .btn {
+                width: 48%;
+                margin-bottom: 0;
+            }
+
+            .sticky-top {
+                position: relative !important;
+                top: 0 !important;
+                margin-top: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .d-flex.justify-content-between .btn {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+
+            .d-flex.justify-content-between .btn:last-child {
+                margin-bottom: 0;
+            }
+
+            .delivery-option .card-body {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Animaciones adicionales */
+        .step-content {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Mejoras en el resumen del pedido */
+        .card.sticky-top .card-body h5 {
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+
+        .card.sticky-top .card-body hr {
+            margin: 1.5rem 0;
+            border-color: #e8ecef;
+        }
+
+        .card.sticky-top .card-body .d-flex {
+            margin-bottom: 1rem;
+        }
+
+        .card.sticky-top .card-body .fw-bold.fs-5 {
+            font-size: 1.5rem !important;
+            color: #2c3e50;
+        }
+
+        /* Estados de validación mejorados */
+        .was-validated .form-control:valid {
+            border-color: #28a745;
+            box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1);
+        }
+
+        .was-validated .form-control:invalid {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
+        }
