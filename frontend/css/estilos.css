@@ -30,12 +30,20 @@
 body {
     font-family: 'Montserrat', sans-serif;
     color: var(--color-font);
-    background-color: #f9fafb;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     line-height: 1.6;
-    padding-top: 70px;
+    padding-top: 60px;
 }
 
+.container {
+    padding: 0 2rem;
+}
 
+.container h2 {
+    font-weight: 700;
+    text-align: center;
+    font-size: 2.5rem;
+}
 
 /* Breakpoints tipo Tailwind */
 @media (min-width: 640px) {

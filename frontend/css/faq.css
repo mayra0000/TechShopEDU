@@ -36,3 +36,29 @@
     border-radius: 10px;
 }
 
+.accordion {
+    border: none;
+}
+
+.accordion-item {
+    border: none;
+    border-radius: 10px !important;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.accordion-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.accordion-button {
+    background-color: #c3cfe2;
+    border: none;
+    padding: 1.7rem;
+    font-weight: 600;
+    border-radius: 0 !important;
+    transition: all 0.3s ease;
+}

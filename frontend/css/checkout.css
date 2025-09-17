@@ -310,6 +310,7 @@
             box-shadow: 0 8px 25px rgba(74, 134, 232, 0.3);
         }
 
+
         /* Resumen del pedido mejorado */
         .sticky-top {
             top: 2rem;
@@ -337,6 +338,21 @@
             color: #ccc;
             margin-bottom: 2rem;
             animation: float 3s ease-in-out infinite;
+        }
+
+        #btn_carrito1,#btn_carrito2{
+            margin: 10px;
+        }
+
+        #btn_carrito2{
+            border: 2px solid var(--danger);
+        }
+
+        @media (max-width: 768px) {
+            #btn_carrito1,#btn_carrito2{
+                width: auto;
+                max-width: 90%;
+            }
         }
 
         @keyframes float {
