@@ -48,27 +48,12 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6 mt-3">
-            <div class="input-group">
-                <input type="text" class="form-control" id="buscar-productos" 
-                    placeholder="Buscar productos...">
-                <button class="btn btn-outline-primary" type="button">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
-        </div>
+        
     </section>
 
     <!-- Catálogo de Productos -->
     <section id="productos" class="py-5">
-        <div class="row mb-4">
-            <div class="col-12">
-                <h5>Filtrar por categoría:</h5>
-                <div id="filtros-categorias">
-                    <!-- Se cargan automaticamente las categorias -->
-                </div>
-            </div>
-        </div>
+
         <div class="container">
             <!-- Título destacado -->
             <div class="row">
@@ -85,27 +70,29 @@
                 </button>
                 
                 <div class="row align-items-end" id="filtersContainer">
-                    <!-- Búsqueda -->
+                    
+                 <!-- Búsqueda -->
                     <div class="col-md-3 filter-group">
                         <label for="searchInput">Buscar producto</label>
-                        <div class="search-box">
-                            <i class="fas fa-search"></i>
-                            <input type="text" class="form-control" id="searchInput" placeholder="Nombre, marca, etc.">
-                        </div>
+                        <div class="col-md-3 input-group">
+                            <input type="text" class="form-control" id="buscar-productos" 
+                                placeholder="Buscar productos...">
+                            <button class="btn btn-outline-primary" type="button">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>                    
+
                     </div>
+
+
                     
-                    <!-- Filtro por categoría -->
-                    <div class="col-md-2 filter-group">
-                        <label for="categoryFilter">Categoría</label>
-                        <select class="form-select" id="categoryFilter">
-                            <option value="">Todas</option>
-                            <option value="robotica">Robótica</option>
-                            <option value="programacion">Programación</option>
-                            <option value="electronica">Electrónica</option>
-                            <option value="realidad-virtual">Realidad Virtual</option>
-                            <option value="impresion-3d">Impresión 3D</option>
-                        </select>
-                    </div>
+                   <!-- Filtro por categoría -->
+<div class="col-md-2 filter-group">
+    <label for="categoryFilter">Categoría</label>
+    <select class="form-select" id="categoryFilter">
+        <option value="todas">Cargando categorías...</option>
+    </select>
+</div>
                     
                     <!-- Filtro por precio -->
                     <div class="col-md-3 filter-group">
