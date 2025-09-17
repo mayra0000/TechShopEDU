@@ -91,6 +91,29 @@ function crearTarjetaProducto(producto) {
     return col;
 }
 
+// Función auxiliar para obtener código de color del valor
+function obtenerColorDeValor(valor) {
+    // Si el valor ya es un código de color hex
+    if (valor.startsWith('#')) return valor;
+
+    // Mapeo de nombres de colores comunes a códigos hex
+    const colores = {
+        'rojo': '#EF4444',
+        'azul': '#3B82F6',
+        'verde': '#10B981',
+        'amarillo': '#F59E0B',
+        'negro': '#000000',
+        'blanco': '#FFFFFF',
+        'gris': '#9CA3AF',
+        'rosa': '#EC4899',
+        'morado': '#8B5CF6',
+        'naranja': '#F97316',
+        'cyan': '#06B6D4'
+    };
+
+    return colores[valor.toLowerCase()] || '#9CA3AF'; // Gris por defecto
+}
+
 // Function to create variant selectors
 function crearSelectoresVariantes(producto) {
     if (!producto.variantes || producto.variantes.length === 0) {
@@ -109,21 +132,32 @@ function crearSelectoresVariantes(producto) {
 
     let html = '';
     Object.keys(variantesPorTipo).forEach(tipo => {
+        // Determinar si es una variante de color
+        const esColor = tipo.toLowerCase().includes('color');
+
         html += `
-            <div class="mb-2">
-                <small class="text-muted text-capitalize">${tipo}:</small><br>
+            <div class="variant-selector mb-3">
+                <span class="variant-label text-capitalize">${tipo}:</span>
                 <div class="variant-options" data-tipo="${tipo}" data-producto="${producto.id}">
-                    ${variantesPorTipo[tipo].map((variante, index) => `
-                        <span class="variant-option ${index === 0 ? 'active' : ''}" 
-                              data-valor="${variante.valor}" 
-                              data-precio="${variante.precio_extra || 0}"
-                              data-stock="${variante.stock || 0}"
-                              onclick="seleccionarVariante(this, ${producto.id})"
-                              ${(variante.stock || 0) <= 0 ? 'data-disabled="true"' : ''}>
-                            ${variante.valor}
-                            ${variante.precio_extra > 0 ? ` (+$${variante.precio_extra})` : ''}
-                        </span>
-                    `).join('')}
+                    ${variantesPorTipo[tipo].map((variante, index) => {
+            const esColorVariante = esColor || variante.valor.toLowerCase().includes('#');
+            const estiloColor = esColorVariante ? `style="background-color: ${obtenerColorDeValor(variante.valor)}"` : '';
+
+            return `
+                            <button type="button" 
+                                    class="variant-option ${esColorVariante ? 'color-option' : ''} ${index === 0 ? 'selected' : ''}" 
+                                    data-valor="${variante.valor}" 
+                                    data-precio="${variante.precio_extra || 0}"
+                                    data-stock="${variante.stock || 0}"
+                                    onclick="seleccionarVariante(this, ${producto.id})"
+                                    ${(variante.stock || 0) <= 0 ? 'disabled' : ''}
+                                    ${esColorVariante ? estiloColor : ''}
+                                    title="${variante.valor}${variante.precio_extra > 0 ? ` (+$${variante.precio_extra})` : ''}">
+                                ${!esColorVariante ? variante.valor : ''}
+                                ${!esColorVariante && variante.precio_extra > 0 ? ` (+$${variante.precio_extra})` : ''}
+                            </button>
+                        `;
+        }).join('')}
                 </div>
             </div>
         `;
@@ -135,32 +169,40 @@ function crearSelectoresVariantes(producto) {
 // Function to select variant
 function seleccionarVariante(elemento, productoId) {
     // Check if variant is disabled (out of stock)
-    if (elemento.dataset.disabled === 'true') {
+    if (elemento.disabled) {
         mostrarNotificacion('Esta variante está agotada', 'warning');
         return;
     }
 
-    const hermanos = elemento.parentNode.querySelectorAll('.variant-option');
-    hermanos.forEach(h => h.classList.remove('active'));
+    const contenedorVariantes = elemento.closest('.variant-options');
+    const opciones = contenedorVariantes.querySelectorAll('.variant-option');
 
-    elemento.classList.add('active');
+    opciones.forEach(opcion => opcion.classList.remove('selected'));
+    elemento.classList.add('selected');
+
     actualizarPrecioProducto(productoId);
 }
-
 // Function to update product price based on selected variants
 function actualizarPrecioProducto(productoId) {
     const producto = productos.find(p => p.id === productoId);
     if (!producto) return;
 
     let precioTotal = parseFloat(producto.precio);
+    let stockDisponible = producto.stock;
 
-    // Add prices from selected variants
+    // Add prices from selected variants and check stock
     const variantesContainer = document.getElementById(`variants-${productoId}`);
     if (variantesContainer) {
-        const variantesActivas = variantesContainer.querySelectorAll('.variant-option.active');
+        const variantesActivas = variantesContainer.querySelectorAll('.variant-option.selected');
 
         variantesActivas.forEach(variante => {
             precioTotal += parseFloat(variante.dataset.precio) || 0;
+
+            // Verificar el stock de la variante si está disponible
+            const stockVariante = parseInt(variante.dataset.stock) || 0;
+            if (stockVariante > 0 && stockVariante < stockDisponible) {
+                stockDisponible = stockVariante;
+            }
         });
     }
 
@@ -169,8 +211,19 @@ function actualizarPrecioProducto(productoId) {
     if (precioElemento) {
         precioElemento.textContent = `$${precioTotal.toFixed(2)}`;
     }
-}
 
+    // Actualizar estado del botón de agregar al carrito
+    const botonCarrito = document.querySelector(`#variants-${productoId}`).closest('.card').querySelector('.btn-add-to-cart');
+    if (botonCarrito) {
+        if (stockDisponible <= 0) {
+            botonCarrito.disabled = true;
+            botonCarrito.textContent = 'Sin Stock';
+        } else {
+            botonCarrito.disabled = false;
+            botonCarrito.textContent = 'Agregar al Carrito';
+        }
+    }
+}
 // Function to get selected variants for a product
 function obtenerVariantesSeleccionadas(productoId) {
     const variantes = {};
