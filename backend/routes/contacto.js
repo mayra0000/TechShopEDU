@@ -77,8 +77,9 @@ router.get('/', [
   query('pagina').optional().isInt({ min: 1 }).withMessage('Página debe ser mayor a 0')
 ], handleValidationErrors, async (req, res) => {
   try {
-    const { estado, limite = 20, pagina = 1, busqueda } = req.query;
-    const offset = (pagina - 1) * limite;
+    const { estado, busqueda } = req.query;
+    const limite = 20; // Fixed limit for now
+    const pagina = 1;  // Fixed page for now
 
     let sql = `
             SELECT 
@@ -104,18 +105,16 @@ router.get('/', [
       sql += ' WHERE ' + conditions.join(' AND ');
     }
 
-    sql += ' ORDER BY fecha_envio DESC LIMIT ? OFFSET ?';
-    params.push(parseInt(limite), parseInt(offset));
+    sql += ' ORDER BY fecha_envio DESC LIMIT 20'; // Remove parameterized LIMIT for now
 
     const mensajes = await db.query(sql, params);
 
-    // Contar total
+    // Simple count without parameters
     let countSql = 'SELECT COUNT(*) as total FROM contactos';
     const countParams = [];
     if (conditions.length > 0) {
       countSql += ' WHERE ' + conditions.join(' AND ');
-      // Usar los mismos parámetros excepto límite y offset
-      countParams.push(...params.slice(0, -2));
+      countParams.push(...params); // Use all params except limit/offset
     }
 
     const total = await db.fetchOne(countSql, countParams);
@@ -124,8 +123,8 @@ router.get('/', [
       success: true,
       mensajes,
       total: total.total,
-      pagina: parseInt(pagina),
-      limite: parseInt(limite)
+      pagina: pagina,
+      limite: limite
     });
 
   } catch (error) {
@@ -133,48 +132,6 @@ router.get('/', [
     res.status(500).json({
       success: false,
       message: 'Error obteniendo mensajes de contacto'
-    });
-  }
-});
-
-// GET /api/contacto/:id - Obtener mensaje específico (para admin)
-router.get('/:id', [
-  param('id').isInt({ min: 1 }).withMessage('ID inválido')
-], handleValidationErrors, async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const mensaje = await db.fetchOne(
-      'SELECT * FROM contactos WHERE id = ?',
-      [id]
-    );
-
-    if (!mensaje) {
-      return res.status(404).json({
-        success: false,
-        message: 'Mensaje no encontrado'
-      });
-    }
-
-    // Marcar como leído si estaba como nuevo
-    if (mensaje.estado === 'nuevo') {
-      await db.query(
-        'UPDATE contactos SET estado = "leido" WHERE id = ?',
-        [id]
-      );
-      mensaje.estado = 'leido';
-    }
-
-    res.json({
-      success: true,
-      mensaje
-    });
-
-  } catch (error) {
-    console.error('Error obteniendo mensaje:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error obteniendo mensaje'
     });
   }
 });

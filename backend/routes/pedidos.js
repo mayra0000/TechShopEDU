@@ -377,15 +377,16 @@ router.put('/:numeroPedido/estado', [
   }
 });
 
-// GET /api/pedidos - Obtener todos los pedidos (para admin)
+
 router.get('/', [
   query('estado').optional().isIn(['pendiente', 'procesando', 'enviado', 'entregado', 'cancelado']).withMessage('Estado inválido'),
   query('limite').optional().isInt({ min: 1, max: 100 }).withMessage('Límite debe estar entre 1 y 100'),
   query('pagina').optional().isInt({ min: 1 }).withMessage('Página debe ser mayor a 0')
 ], handleValidationErrors, async (req, res) => {
   try {
-    const { estado, limite = 20, pagina = 1 } = req.query;
-    const offset = (pagina - 1) * limite;
+    const { estado } = req.query;
+    const limite = 20; // Fixed limit for now
+    const pagina = 1;  // Fixed page for now
 
     let sql = `
             SELECT 
@@ -400,27 +401,23 @@ router.get('/', [
       params.push(estado);
     }
 
-    sql += ' ORDER BY fecha_pedido DESC LIMIT ? OFFSET ?';
-    params.push(parseInt(limite), parseInt(offset));
+    sql += ' ORDER BY fecha_pedido DESC LIMIT 20'; // Remove parameterized LIMIT for now
 
     const pedidos = await db.query(sql, params);
 
-    // Contar total
-    let countSql = 'SELECT COUNT(*) as total FROM pedidos';
-    const countParams = [];
-    if (estado) {
-      countSql += ' WHERE estado = ?';
-      countParams.push(estado);
-    }
-
+    // Simple count without parameters
+    const countSql = estado ?
+      'SELECT COUNT(*) as total FROM pedidos WHERE estado = ?' :
+      'SELECT COUNT(*) as total FROM pedidos';
+    const countParams = estado ? [estado] : [];
     const total = await db.fetchOne(countSql, countParams);
 
     res.json({
       success: true,
       pedidos,
       total: total.total,
-      pagina: parseInt(pagina),
-      limite: parseInt(limite)
+      pagina: pagina,
+      limite: limite
     });
 
   } catch (error) {

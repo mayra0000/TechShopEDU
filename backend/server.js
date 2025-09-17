@@ -10,6 +10,7 @@ const productosRoutes = require('./routes/productos');
 const carritoRoutes = require('./routes/carrito');
 const pedidosRoutes = require('./routes/pedidos');
 const contactoRoutes = require('./routes/contacto');
+const dashboardRoutes = require('./routes/dashboard');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -47,6 +48,7 @@ app.use('/api/productos', productosRoutes);
 app.use('/api/carrito', carritoRoutes);
 app.use('/api/pedidos', pedidosRoutes);
 app.use('/api/contacto', contactoRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // Manejador 404
 app.use((req, res) => {
