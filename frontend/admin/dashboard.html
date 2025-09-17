@@ -13,47 +13,56 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <aside class="barra-lateral col-12 col-sm-auto p-0"> 
+            <!-- Botón para mostrar/ocultar menú en móviles -->
+            <button class="btn btn-primary d-md-none mobile-menu-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                </svg>
+                Menú
+            </button>
+            
+            <aside class="barra-lateral col-12 col-md-3 col-lg-2 p-0 collapse d-md-block" id="sidebarCollapse"> 
                 <div class="logo">
                     <h2 class="py-4 m-0">TechShop EDU</h2>
                 </div>
-                <nav class="menu d-flex d-sm-block justify-content-center flex-wrap">
+                <nav class="menu d-flex d-md-block justify-content-center flex-wrap">
                     <a href="#" onclick="mostrarSeccion('dashboard')" class="menu-link active">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-houses-fill" viewBox="0 0 16 16">
                             <path d="M7.207 1a1 1 0 0 0-1.414 0L.146 6.646a.5.5 0 0 0 .708.708L1 7.207V12.5A1.5 1.5 0 0 0 2.5 14h.55a2.5 2.5 0 0 1-.05-.5V9.415a1.5 1.5 0 0 1-.56-2.475l5.353-5.354z"/>
                             <path d="M8.793 2a1 1 0 0 1 1.414 0L12 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l1.854 1.853a.5.5 0 0 1-.708.708L15 8.207V13.5a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 4 13.5V8.207l-.146.147a.5.5 0 1 1-.708-.708z"/>
                         </svg>
-                        Dashboard
+                        <span class="menu-text">Dashboard</span>
                     </a>
                     <a href="#" onclick="mostrarSeccion('pedidos')" class="menu-link">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-archive-fill" viewBox="0 0 16 16">
                             <path d="M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15zM5.5 7h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1M.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8z"/>
                         </svg>
-                        Pedidos
+                        <span class="menu-text">Pedidos</span>
                     </a>
                     <a href="#" onclick="mostrarSeccion('contactos')" class="menu-link">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-heart" viewBox="0 0 16 16">
                             <path d="M9 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1h10s1 0 1-1-1-4-6-4-6 3-6 4m13.5-8.09c1.387-1.425 4.855 1.07 0 4.277-4.854-3.207-1.387-5.702 0-4.276Z"/>
                         </svg>
-                        Contactos
+                        <span class="menu-text">Contactos</span>
                     </a>
-                    <a href="../index.html">
+                    <a href="../index.html" class="menu-link">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-open-fill" viewBox="0 0 16 16">
                             <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15zM11 2h.5a.5.5 0 0 1 .5.5V15h-1zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1"/>
                         </svg>
-                        Volver a Tienda
+                        <span class="menu-text">Volver a Tienda</span>
                     </a>
                 </nav>
             </aside>
             
-            <main class="main col">
+            <main class="main col-12 col-md-9 col-lg-10">
                 <!-- Dashboard Section -->
                 <div id="dashboard-section" class="seccion active">
                     <div class="row">
-                        <div class="columna col-12">
-                            <h3 class="titulo">Dashboard de Ventas</h3>
+                        <div class="col-12">
+                            <h3 class="titulo mb-4">Dashboard de Ventas</h3>
                             
                             <!-- Statistics Cards -->
+                             <!-- Statistics Cards -->
                             <div class="widget estadisticas mb-4">
                                 <div class="contenedor d-flex flex-wrap" id="stats-container">
                                     <div class="caja">
@@ -72,31 +81,31 @@
                             </div>
 
                             <!-- Charts Row -->
-                            <div class="row">
-                                <div class="col-lg-6 mb-4">
-                                    <div class="chart-container">
-                                        <h5>Ventas por Mes</h5>
+                            <div class="row mb-4">
+                                <div class="col-12 col-lg-6 mb-4">
+                                    <div class="chart-container p-4">
+                                        <h5 class="mb-4">Ventas por Mes</h5>
                                         <canvas id="ventasPorMes"></canvas>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="chart-container">
-                                        <h5>Productos Más Vendidos</h5>
+                                <div class="col-12 col-lg-6 mb-4">
+                                    <div class="chart-container p-4">
+                                        <h5 class="mb-4">Productos Más Vendidos</h5>
                                         <canvas id="productosMasVendidos"></canvas>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div class="col-lg-6 mb-4">
-                                    <div class="chart-container">
-                                        <h5>Estados de Pedidos</h5>
+                                <div class="col-12 col-lg-6 mb-4">
+                                    <div class="chart-container p-4">
+                                        <h5 class="mb-4">Estados de Pedidos</h5>
                                         <canvas id="estadosPedidos"></canvas>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="chart-container">
-                                        <h5>Métodos de Entrega</h5>
+                                <div class="col-12 col-lg-6 mb-4">
+                                    <div class="chart-container p-4">
+                                        <h5 class="mb-4">Métodos de Entrega</h5>
                                         <canvas id="metodosEntrega"></canvas>
                                     </div>
                                 </div>
@@ -108,12 +117,12 @@
                 <!-- Orders Section -->
                 <div id="pedidos-section" class="seccion">
                     <div class="row">
-                        <div class="columna col-12">
-                            <h3 class="titulo">Gestión de Pedidos</h3>
+                        <div class="col-12">
+                            <h3 class="titulo mb-4">Gestión de Pedidos</h3>
                             
-                            <div class="widget">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h5>Pedidos Recientes</h5>
+                            <div class="widget p-4">
+                                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+                                    <h5 class="mb-3 mb-md-0">Pedidos Recientes</h5>
                                     <button class="btn btn-primary" onclick="cargarPedidos()">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
                                             <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
@@ -148,12 +157,12 @@
                 <!-- Contacts Section -->
                 <div id="contactos-section" class="seccion">
                     <div class="row">
-                        <div class="columna col-12">
-                            <h3 class="titulo">Mensajes de Contacto</h3>
+                        <div class="col-12">
+                            <h3 class="titulo mb-4">Mensajes de Contacto</h3>
                             
-                            <div class="widget comentarios">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h5>Mensajes Recientes</h5>
+                            <div class="widget comentarios p-4">
+                                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+                                    <h5 class="mb-3 mb-md-0">Mensajes Recientes</h5>
                                     <button class="btn btn-primary" onclick="cargarContactos()">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
                                             <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
