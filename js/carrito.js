@@ -13,10 +13,10 @@ function guardarCarrito(carrito) {
 // Función para agregar item al carrito
 function agregarItemAlCarrito(nuevoItem) {
     let carrito = obtenerCarrito();
-    
+
     // Buscar si el producto ya existe con las mismas variantes
-    const itemExistente = carrito.find(item => 
-        item.id === nuevoItem.id && 
+    const itemExistente = carrito.find(item =>
+        item.id === nuevoItem.id &&
         JSON.stringify(item.variantes) === JSON.stringify(nuevoItem.variantes)
     );
 
@@ -26,7 +26,7 @@ function agregarItemAlCarrito(nuevoItem) {
         carrito.push(nuevoItem);
     }
 
-    guardarCarrito(carrito);  
+    guardarCarrito(carrito);
     //Recargar
     if (window.location.pathname.includes('carrito.html')) {
         cargarCarrito();
@@ -37,7 +37,7 @@ function agregarItemAlCarrito(nuevoItem) {
 function actualizarContadorCarrito() {
     const carrito = obtenerCarrito();
     const totalItems = carrito.reduce((total, item) => total + item.cantidad, 0);
-    
+
     const badge = document.getElementById('cart-badge');
     if (badge) {
         badge.textContent = totalItems;
@@ -139,7 +139,7 @@ function eliminarDelCarrito(index) {
     carrito.splice(index, 1);
     guardarCarrito(carrito);
     cargarCarrito();
-    
+
     mostrarNotificacion('Producto eliminado del carrito', 'warning');
 }
 
@@ -170,7 +170,7 @@ function calcularTotalesCarrito() {
 // Función para actualizar totales 
 function actualizarTotalesCarrito() {
     const totales = calcularTotalesCarrito();
-    
+
     const subtotalElement = document.getElementById('subtotal-carrito');
     const impuestosElement = document.getElementById('impuestos-carrito');
     const totalElement = document.getElementById('total-carrito');
@@ -178,7 +178,7 @@ function actualizarTotalesCarrito() {
     if (subtotalElement) subtotalElement.textContent = `$${totales.subtotal.toFixed(2)}`;
     if (impuestosElement) impuestosElement.textContent = `$${totales.impuestos.toFixed(2)}`;
     if (totalElement) totalElement.textContent = `$${totales.total.toFixed(2)}`;
-    
+
     actualizarTotalesCheckout();
 }
 
@@ -195,17 +195,17 @@ function irAlCheckout() {
 // Función para actualizar totales en checkout
 function actualizarTotalesCheckout() {
     const totales = calcularTotalesCarrito();
-    
+
     // Obtener costo de envío seleccionado
     const metodoEntrega = localStorage.getItem('techshop_metodo_entrega');
     let costoEnvio = 0;
-    
+
     if (metodoEntrega === 'expres') {
         costoEnvio = 150;
     }
-    
+
     const totalFinal = totales.subtotal + totales.impuestos + costoEnvio;
-    
+
     const subtotalCheckout = document.getElementById('subtotal-checkout');
     const impuestosCheckout = document.getElementById('impuestos-checkout');
     const costoEnvioElement = document.getElementById('costo-envio');
@@ -222,7 +222,7 @@ function mostrarNotificacion(mensaje, tipo = 'info') {
     const notificacion = document.createElement('div');
     notificacion.className = `alert alert-${tipo} alert-dismissible fade show position-fixed`;
     notificacion.style.cssText = 'top: 100px; right: 20px; z-index: 1050; min-width: 300px;';
-    
+
     notificacion.innerHTML = `
         ${mensaje}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -240,7 +240,7 @@ function mostrarNotificacion(mensaje, tipo = 'info') {
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
     actualizarContadorCarrito();
-    
+
     //Cargar el carrito
     if (window.location.pathname.includes('carrito.html')) {
         cargarCarrito();
