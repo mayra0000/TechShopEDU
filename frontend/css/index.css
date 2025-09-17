@@ -231,3 +231,174 @@
             margin-bottom: 1rem;
         }
 
+/* Estilos para el selector de variantes */
+.variant-selector {
+    margin: 0.8rem 0;
+}
+
+.variant-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.variant-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.variant-option {
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 50px;
+    text-align: center;
+}
+
+.variant-option:hover {
+    border-color: var(--primary-blue);
+    transform: translateY(-2px);
+}
+
+.variant-option.selected {
+    border-color: var(--accent-green);
+    background-color: rgba(16, 185, 129, 0.1);
+    font-weight: 600;
+    color: var(--accent-green);
+}
+
+/* Para variantes de color */
+.variant-option.color-option {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    padding: 0;
+    position: relative;
+}
+
+.variant-option.color-option.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Estilos responsivos */
+@media (max-width: 576px) {
+    .variant-options {
+        gap: 0.3rem;
+    }
+    
+    .variant-option {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.75rem;
+        min-width: 45px;
+    }
+    
+    .variant-option.color-option {
+        width: 25px;
+        height: 25px;
+    }
+}
+
+/* Estilos para el selector de variantes */
+.variant-selector {
+    margin: 1rem 0;
+}
+
+.variant-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin-bottom: 0.5rem;
+}
+
+.variant-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+.variant-option {
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 50px;
+    text-align: center;
+}
+
+.variant-option:hover:not(:disabled) {
+    border-color: var(--primary-blue);
+    transform: translateY(-2px);
+}
+
+.variant-option.selected {
+    border-color: var(--accent-green);
+    background-color: rgba(16, 185, 129, 0.1);
+    font-weight: 600;
+    color: var(--accent-green);
+}
+
+.variant-option:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
+/* Para variantes de color */
+.variant-option.color-option {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    padding: 0;
+    position: relative;
+    min-width: auto;
+}
+
+.variant-option.color-option.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Estilos responsivos */
+@media (max-width: 576px) {
+    .variant-options {
+        gap: 0.3rem;
+    }
+    
+    .variant-option {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.75rem;
+        min-width: 45px;
+    }
+    
+    .variant-option.color-option {
+        width: 25px;
+        height: 25px;
+    }
+}
