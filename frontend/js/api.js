@@ -224,6 +224,22 @@ class TechShopAPI {
     };
   }
 
+  async getEstadisticasVentas() {
+    return this.request('/dashboard/estadisticas');
+  }
+
+  async getDatosGraficos() {
+    return this.request('/dashboard/graficos');
+  }
+
+  async getVentasRecientes(limite = 10) {
+    return this.request(`/dashboard/ventas-recientes?limite=${limite}`);
+  }
+
+  async getProductosStockBajo(limite = 10) {
+    return this.request(`/dashboard/productos-stock-bajo?limite=${limite}`);
+  }
+
   // Manejar errores de red
   isNetworkError(error) {
     return error.message.includes('fetch') ||
