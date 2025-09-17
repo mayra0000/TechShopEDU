@@ -379,7 +379,7 @@ function mostrarNotificacion(mensaje, tipo = 'info') {
 }
 
 // Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', async function () {
+document.addEventListener('DOMContentLoaded', async function() {
     try {
         await cargarCategorias();
         await cargarProductos();
@@ -388,7 +388,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const searchInput = document.getElementById('buscar-productos');
         if (searchInput) {
             let timeoutId;
-            searchInput.addEventListener('input', function () {
+            searchInput.addEventListener('input', function() {
                 clearTimeout(timeoutId);
                 timeoutId = setTimeout(() => {
                     buscarProductos(this.value.trim());
@@ -400,3 +400,387 @@ document.addEventListener('DOMContentLoaded', async function () {
         mostrarError('Error cargando la página');
     }
 });
+
+// ... código anterior sin cambios hasta la función cargarProductos ...
+
+// Function to load products from API
+async function cargarProductos(filtros = {}) {
+    const container = document.getElementById('productos-container');
+    if (!container) return;
+
+    try {
+        mostrarCargando(true);
+
+        // Si hay filtros aplicados, usar la función de filtrado
+        if (Object.keys(filtros).length > 0) {
+            await aplicarFiltrosIndividuales(filtros);
+        } else {
+            // Cargar todos los productos sin filtros
+            const response = await api.getProductos();
+
+            if (response.success) {
+                productos = response.productos;
+                container.innerHTML = '';
+
+                if (productos.length === 0) {
+                    document.getElementById('noResults').style.display = 'block';
+                } else {
+                    document.getElementById('noResults').style.display = 'none';
+                    productos.forEach(producto => {
+                        const productCard = crearTarjetaProducto(producto);
+                        container.appendChild(productCard);
+                    });
+                }
+                actualizarContadorResultados(productos.length);
+            } else {
+                mostrarError('Error cargando productos: ' + response.message);
+            }
+        }
+    } catch (error) {
+        console.error('Error cargando productos:', error);
+        mostrarError('Error cargando productos: ' + api.getErrorMessage(error));
+    } finally {
+        mostrarCargando(false);
+    }
+}
+
+// Función para aplicar filtros individuales y combinar resultados
+async function aplicarFiltrosIndividuales(filtros) {
+    try {
+        let productosFiltrados = [];
+
+        // Obtener todos los productos primero para aplicar filtros locales
+        const responseTodos = await api.getProductos();
+        if (!responseTodos.success) {
+            mostrarError('Error obteniendo productos: ' + responseTodos.message);
+            return;
+        }
+
+        productosFiltrados = responseTodos.productos;
+
+        // Aplicar filtro de búsqueda si existe
+        if (filtros.busqueda && filtros.busqueda.length >= 2) {
+            const responseBusqueda = await api.buscarProductos(filtros.busqueda);
+            if (responseBusqueda.success) {
+                // Intersectar con productos ya filtrados
+                const idsBusqueda = responseBusqueda.productos.map(p => p.id);
+                productosFiltrados = productosFiltrados.filter(p =>
+                    idsBusqueda.includes(p.id)
+                );
+            }
+        }
+
+        // Aplicar filtro de categoría si existe
+        if (filtros.categoria && filtros.categoria !== 'todas') {
+            const responseCategoria = await api.getProductosPorCategoria(filtros.categoria);
+            if (responseCategoria.success) {
+                // Intersectar con productos ya filtrados
+                const idsCategoria = responseCategoria.productos.map(p => p.id);
+                productosFiltrados = productosFiltrados.filter(p =>
+                    idsCategoria.includes(p.id)
+                );
+            }
+        }
+
+        // Aplicar filtro de precio máximo si existe (filtro local)
+        if (filtros.precioMax && filtros.precioMax > 0) {
+            productosFiltrados = productosFiltrados.filter(p =>
+                parseFloat(p.precio) <= parseFloat(filtros.precioMax)
+            );
+        }
+
+        // Aplicar ordenamiento si existe (ordenamiento local)
+        if (filtros.orden && filtros.orden !== 'default') {
+            productosFiltrados = ordenarProductosLocal(productosFiltrados, filtros.orden);
+        }
+
+        // Mostrar resultados
+        productos = productosFiltrados;
+        const container = document.getElementById('productos-container');
+        container.innerHTML = '';
+
+        if (productos.length === 0) {
+            document.getElementById('noResults').style.display = 'block';
+        } else {
+            document.getElementById('noResults').style.display = 'none';
+            productos.forEach(producto => {
+                const productCard = crearTarjetaProducto(producto);
+                container.appendChild(productCard);
+            });
+        }
+        actualizarContadorResultados(productos.length);
+
+    } catch (error) {
+        console.error('Error aplicando filtros:', error);
+        mostrarError('Error aplicando filtros: ' + api.getErrorMessage(error));
+    }
+}
+
+// Función para ordenar productos localmente
+function ordenarProductosLocal(productos, criterio) {
+    const productosCopia = [...productos];
+
+    switch (criterio) {
+        case 'price-asc':
+            return productosCopia.sort((a, b) => parseFloat(a.precio) - parseFloat(b.precio));
+        case 'price-desc':
+            return productosCopia.sort((a, b) => parseFloat(b.precio) - parseFloat(a.precio));
+        case 'name-asc':
+            return productosCopia.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        case 'name-desc':
+            return productosCopia.sort((a, b) => b.nombre.localeCompare(a.nombre));
+        default:
+            return productosCopia;
+    }
+}
+
+// Search functionality
+async function buscarProductos(termino) {
+    if (!termino || termino.length < 2) {
+        await aplicarFiltros();
+        return;
+    }
+
+    try {
+        mostrarCargando(true);
+        const response = await api.buscarProductos(termino);
+
+        if (response.success) {
+            productos = response.productos;
+            const container = document.getElementById('productos-container');
+            container.innerHTML = '';
+
+            if (productos.length === 0) {
+                document.getElementById('noResults').style.display = 'block';
+            } else {
+                document.getElementById('noResults').style.display = 'none';
+                productos.forEach(producto => {
+                    const productCard = crearTarjetaProducto(producto);
+                    container.appendChild(productCard);
+                });
+            }
+            actualizarContadorResultados(productos.length);
+        }
+    } catch (error) {
+        console.error('Error buscando productos:', error);
+        mostrarError('Error en la búsqueda: ' + api.getErrorMessage(error));
+    } finally {
+        mostrarCargando(false);
+    }
+}
+
+// Function to load categories
+async function cargarCategorias() {
+    try {
+        const response = await api.getCategorias();
+
+        if (response.success) {
+            categorias = response.categorias;
+            renderizarFiltrosCategorias();
+        }
+    } catch (error) {
+        console.error('Error cargando categorías:', error);
+    }
+}
+
+// Function to render category filters
+function renderizarFiltrosCategorias() {
+    const filtrosContainer = document.getElementById('filtros-categorias');
+    const categoryFilter = document.getElementById('categoryFilter');
+
+    if (filtrosContainer) {
+        let html = `
+            <button class="btn btn-outline-primary me-2 mb-2" onclick="filtrarPorCategoria('todas')">
+                Todas las categorías
+            </button>
+        `;
+
+        categorias.forEach(categoria => {
+            html += `
+                <button class="btn btn-outline-primary me-2 mb-2" 
+                        onclick="filtrarPorCategoria('${categoria.nombre}')">
+                    ${categoria.nombre} (${categoria.total_productos || 0})
+                </button>
+            `;
+        });
+
+        filtrosContainer.innerHTML = html;
+    }
+
+    if (categoryFilter) {
+        let html = `<option value="todas">Todas las categorías</option>`;
+
+        categorias.forEach(categoria => {
+            html += `<option value="${categoria.nombre}">${categoria.nombre}</option>`;
+        });
+
+        categoryFilter.innerHTML = html;
+    }
+}
+
+// Filter by category
+async function filtrarPorCategoria(categoria) {
+    try {
+        mostrarCargando(true);
+
+        if (!categoria || categoria === 'todas') {
+            await aplicarFiltros();
+        } else {
+            const response = await api.getProductosPorCategoria(categoria);
+
+            if (response.success) {
+                productos = response.productos;
+                const container = document.getElementById('productos-container');
+                container.innerHTML = '';
+
+                if (productos.length === 0) {
+                    document.getElementById('noResults').style.display = 'block';
+                } else {
+                    document.getElementById('noResults').style.display = 'none';
+                    productos.forEach(producto => {
+                        const productCard = crearTarjetaProducto(producto);
+                        container.appendChild(productCard);
+                    });
+                }
+                actualizarContadorResultados(productos.length);
+            }
+        }
+    } catch (error) {
+        console.error('Error filtrando por categoría:', error);
+        mostrarError('Error filtrando productos: ' + api.getErrorMessage(error));
+    } finally {
+        mostrarCargando(false);
+    }
+}
+
+// Apply multiple filters
+async function aplicarFiltros() {
+    const categoria = document.getElementById('categoryFilter').value;
+    const precioMax = document.getElementById('priceRange').value;
+    const orden = document.getElementById('sortBy').value;
+    const busqueda = document.getElementById('buscar-productos').value.trim();
+
+    // Construir objeto de filtros
+    const filtros = {};
+
+    if (categoria && categoria !== 'todas') {
+        filtros.categoria = categoria;
+    }
+
+    if (precioMax && precioMax > 0) {
+        filtros.precioMax = precioMax;
+    }
+
+    if (orden && orden !== 'default') {
+        filtros.orden = orden;
+    }
+
+    if (busqueda && busqueda.length >= 2) {
+        filtros.busqueda = busqueda;
+    }
+
+    // Aplicar filtros
+    await cargarProductos(filtros);
+}
+
+// Update results counter
+function actualizarContadorResultados(cantidad) {
+    const contador = document.getElementById('productsCount');
+    if (contador) {
+        contador.textContent = cantidad;
+    }
+}
+
+// Reset filters
+async function resetearFiltros() {
+    document.getElementById('categoryFilter').value = 'todas';
+    document.getElementById('priceRange').value = document.getElementById('priceRange').max;
+    document.getElementById('sortBy').value = 'default';
+    document.getElementById('buscar-productos').value = '';
+
+    // Actualizar display de precios
+    const minPrice = document.getElementById('minPrice');
+    const maxPrice = document.getElementById('maxPrice');
+    const priceRange = document.getElementById('priceRange');
+
+    if (minPrice && maxPrice && priceRange) {
+        minPrice.textContent = '$0';
+        maxPrice.textContent = `$${parseInt(priceRange.max).toLocaleString()}`;
+    }
+
+    await cargarProductos();
+    document.getElementById('noResults').style.display = 'none';
+}
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', async function() {
+    try {
+        await cargarCategorias();
+        await cargarProductos();
+
+        // Setup search functionality if search input exists
+        const searchInput = document.getElementById('buscar-productos');
+        if (searchInput) {
+            let timeoutId;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    buscarProductos(this.value.trim());
+                }, 500);
+            });
+        }
+
+        // Setup price range slider
+        const priceRange = document.getElementById('priceRange');
+        const minPrice = document.getElementById('minPrice');
+        const maxPrice = document.getElementById('maxPrice');
+
+        if (priceRange && minPrice && maxPrice) {
+            // Set initial values
+            minPrice.textContent = '$0';
+            maxPrice.textContent = `$${parseInt(priceRange.max).toLocaleString()}`;
+
+            priceRange.addEventListener('input', function() {
+                maxPrice.textContent = `$${parseInt(this.value).toLocaleString()}`;
+            });
+
+            priceRange.addEventListener('change', function() {
+                aplicarFiltros();
+            });
+        }
+
+        // Setup apply filters button
+        const applyFiltersBtn = document.getElementById('applyFilters');
+        if (applyFiltersBtn) {
+            applyFiltersBtn.addEventListener('click', aplicarFiltros);
+        }
+
+        // Setup reset filters button
+        const resetFiltersBtn = document.getElementById('resetFilters');
+        if (resetFiltersBtn) {
+            resetFiltersBtn.addEventListener('click', resetearFiltros);
+        }
+
+        // Setup category filter
+        const categoryFilter = document.getElementById('categoryFilter');
+        if (categoryFilter) {
+            categoryFilter.addEventListener('change', function() {
+                aplicarFiltros();
+            });
+        }
+
+        // Setup sort filter
+        const sortFilter = document.getElementById('sortBy');
+        if (sortFilter) {
+            sortFilter.addEventListener('change', function() {
+                aplicarFiltros();
+            });
+        }
+
+    } catch (error) {
+        console.error('Error inicializando productos:', error);
+        mostrarError('Error cargando la página');
+    }
+});
+
+// ... el resto del código permanece igual ...
